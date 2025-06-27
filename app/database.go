@@ -32,7 +32,7 @@ func Db() *gorm.DB {
 	db, errNew := gorm.Open(mysql.Open(conn), &gorm.Config{})
 	helper.PanicErr(errNew)
 
-	err = db.AutoMigrate(&models.Produk{})
+	err = db.AutoMigrate(&models.Produk{}, &models.Inventaris{})
 	if err != nil {
 		log.Fatal("AutoMigrate gagal:", err)
 	}

@@ -15,10 +15,16 @@ func main(){
 
 	database := app.Db()
 	validate := validator.New()
+	
 	produkRepo := repository.NewProdukRepositoryImpl(database)
 	produkService := service.NewProdukServiceImpl(produkRepo, validate)
 	produkController := controller.NewProdukControllerImpl(produkService)
-	routes := route.NewRouter(produkController)
+
+	inventRepo := repository.NewInventarisRepositoryImpl(database)
+	inventService := service.NewInventarisServImpl(inventRepo, validate, database)
+	inventController := controller.NewInventControllerImpl(inventService)
+
+	routes := route.NewRouter(produkController, inventController)
 	
 	log.Println("Server run at http://localhost:8080")
 	routes.Run(":8080")
