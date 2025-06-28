@@ -1,6 +1,7 @@
 package service
 
 import (
+	"inventaris/helper"
 	"inventaris/models"
 	"inventaris/repository"
 	"inventaris/web"
@@ -41,13 +42,7 @@ func (p *ProdukServiceImpl) Create(r web.CreateProdukRequest) (web.ProdukRespons
 	}
 
 	result := p.ProdukRepository.Create(produk)
-	response := web.ProdukResponse{
-		ID:        result.Id,
-		Nama:      result.Nama,
-		Deskripsi: result.Deskripsi,
-		Harga:     result.Harga,
-		Kategori:  result.Kategori,
-	}
+	response := helper.ToProdukResponse(result)
 
 	return response, nil
 }
@@ -72,13 +67,7 @@ func (p *ProdukServiceImpl) Update(r web.UpdateProdukRequest) (web.ProdukRespons
 	produk.Kategori = r.Kategori
 
 	result := p.ProdukRepository.Update(produk)
-	response := web.ProdukResponse{
-		ID:        result.Id,
-		Nama:      result.Nama,
-		Deskripsi: result.Deskripsi,
-		Harga:     result.Harga,
-		Kategori:  result.Kategori,
-	}
+	response := helper.ToProdukResponse(result)
 
 	return response, nil
 }
@@ -104,14 +93,7 @@ func (p *ProdukServiceImpl) FindById(produkId int) (web.ProdukResponse, error) {
 		return web.ProdukResponse{}, err
 	}
 
-	response := web.ProdukResponse{
-		ID:        produk.Id,
-		Nama:      produk.Nama,
-		Deskripsi: produk.Deskripsi,
-		Harga:     produk.Harga,
-		Kategori:  produk.Kategori,
-		Gambar:    produk.Gambar,
-	}
+	response := helper.ToProdukResponse(produk)
 
 	return response, nil
 }
@@ -124,14 +106,7 @@ func (p *ProdukServiceImpl) FindAll() ([]web.ProdukResponse, error) {
 
 	var responses []web.ProdukResponse
 	for _, value := range produk {
-		response := web.ProdukResponse{
-			ID:        value.Id,
-			Nama:      value.Nama,
-			Deskripsi: value.Deskripsi,
-			Harga:     value.Harga,
-			Kategori:  value.Kategori,
-			Gambar:    value.Gambar,
-		}
+		response := helper.ToProdukResponse(value)
 
 		responses = append(responses, response)
 	}
@@ -140,7 +115,7 @@ func (p *ProdukServiceImpl) FindAll() ([]web.ProdukResponse, error) {
 }
 
 func (p *ProdukServiceImpl) UpdateImage(produkId int, gambar string) (web.ProdukResponse, error) {
-	produk, err := p.ProdukRepository.FindById(produkId)
+	_, err := p.ProdukRepository.FindById(produkId)
 	if err != nil {
 		return web.ProdukResponse{}, err
 	}
@@ -150,14 +125,7 @@ func (p *ProdukServiceImpl) UpdateImage(produkId int, gambar string) (web.Produk
 		return web.ProdukResponse{}, err
 	}
 
-	response := web.ProdukResponse{
-		ID:        produk.Id,
-		Nama:      produk.Nama,
-		Deskripsi: produk.Deskripsi,
-		Harga:     produk.Harga,
-		Kategori:  produk.Kategori,
-		Gambar:    result.Gambar,
-	}
+	response :=helper.ToProdukResponse(result)
 
 	return response, nil
 }

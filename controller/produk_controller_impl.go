@@ -25,145 +25,84 @@ func NewProdukControllerImpl(produkService service.ProdukService) *ProdukControl
 func (p ProdukControllerImpl) Create(ctx *gin.Context) {
 	produkReq := web.CreateProdukRequest{}
 	if err := ctx.ShouldBindJSON(&produkReq); err != nil {
-		ctx.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Invalid Request",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Request", err.Error())
 		return
 	}
 
 	result, err := p.ProdukService.Create(produkReq)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, web.WebResponse{
-			Code:   http.StatusInternalServerError,
-			Status: "Create Failed",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusInternalServerError, "Create Failed", err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, web.WebResponse{
-		Code:   http.StatusCreated,
-		Status: "Created",
-		Data:   result,
-	})
+	helper.ResponseJSON(ctx, http.StatusCreated, "Created", result)
 }
 
 func (p *ProdukControllerImpl) Update(ctx *gin.Context) {
 	produkReq := web.UpdateProdukRequest{}
 	if err := ctx.ShouldBindJSON(&produkReq); err != nil {
-		ctx.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Invalid Request",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Request", err.Error())
 		return
 	}
 
 	produkId := ctx.Param("produkId")
-	id, errs := strconv.Atoi(produkId)
-	if errs != nil {
-		ctx.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Invalid Produk ID",
-			Data:   errs.Error(),
-		})
+	id, err := strconv.Atoi(produkId)
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk ID", err.Error())
 		return
 	}
 	produkReq.Id = id
 
 	result, err := p.ProdukService.Update(produkReq)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, web.WebResponse{
-			Code:   http.StatusInternalServerError,
-			Status: "Update Failed",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusInternalServerError, "Update Failed", err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Updated",
-		Data:   result,
-	})
+	helper.ResponseJSON(ctx, http.StatusOK, "Updated", result)
 }
 
 func (p *ProdukControllerImpl) Delete(ctx *gin.Context) {
 	produkId := ctx.Param("produkId")
 	id, err := strconv.Atoi(produkId)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Invalid Produk ID",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk ID", err.Error())
 		return
 	}
 
-	if errs := p.ProdukService.Delete(id); errs != nil {
-		ctx.JSON(http.StatusNotFound, web.WebResponse{
-			Code:   http.StatusNotFound,
-			Status: "Produk Not Found",
-			Data:   errs.Error(),
-		})
+	if err := p.ProdukService.Delete(id); err != nil {
+		helper.ResponseJSON(ctx, http.StatusNotFound, "Produk Not Found", err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Deleted",
-		Data:   nil,
-	})
-
+	helper.ResponseJSON(ctx, http.StatusOK, "Deleted", nil)
 }
 
 func (p *ProdukControllerImpl) FindById(ctx *gin.Context) {
 	produkId := ctx.Param("produkId")
 	id, err := strconv.Atoi(produkId)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "Invalid Produk ID",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk ID", err.Error())
 		return
 	}
 
-	result, errs := p.ProdukService.FindById(id)
-	if errs != nil {
-		ctx.JSON(http.StatusNotFound, web.WebResponse{
-			Code:   http.StatusNotFound,
-			Status: "Produk ID Not Found",
-			Data:   errs.Error(),
-		})
+	result, err := p.ProdukService.FindById(id)
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusNotFound, "Produk ID Not Found", err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Ok",
-		Data:   result,
-	})
+	helper.ResponseJSON(ctx, http.StatusOK, "Ok", result)
 }
 
 func (p *ProdukControllerImpl) FindAll(ctx *gin.Context) {
 	produk, err := p.ProdukService.FindAll()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, web.WebResponse{
-			Code:   http.StatusInternalServerError,
-			Status: "Internal Server Error",
-			Data:   err.Error(),
-		})
+		helper.ResponseJSON(ctx, http.StatusInternalServerError, "Internal Server Error", err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Ok",
-		Data:   produk,
-	})
+	helper.ResponseJSON(ctx, http.StatusOK, "Ok", produk)
 
 }
 
@@ -198,29 +137,29 @@ func (p *ProdukControllerImpl) UpdateImage(ctx *gin.Context) {
 	helper.ResponseJSON(ctx, http.StatusOK, "Updated Gambar", result)
 }
 
-func(p *ProdukControllerImpl) DownloadGambar(ctx *gin.Context){
+func (p *ProdukControllerImpl) DownloadGambar(ctx *gin.Context) {
 	produkId := ctx.Param("produkId")
 	id, err := strconv.Atoi(produkId)
-	if err != nil{
+	if err != nil {
 		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk Id", err.Error())
 		return
 	}
 
 	produk, err := p.ProdukService.FindById(id)
-	if err != nil{
+	if err != nil {
 		helper.ResponseJSON(ctx, http.StatusNotFound, "Produk Id Not Found", nil)
 		return
 	}
 
-	if produk.Gambar == ""{
+	if produk.Gambar == "" {
 		helper.ResponseJSON(ctx, http.StatusNotFound, "Gambar Produk Not Found", nil)
 		return
 	}
 
 	file := "uploads/" + produk.Gambar
 	download := ctx.DefaultQuery("download", "false")
-	
-	if download == "true"{
+
+	if download == "true" {
 		ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", produk.Gambar))
 	}
 	//ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", produk.Gambar))
