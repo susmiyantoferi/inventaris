@@ -19,7 +19,8 @@ func NewRouter(
 		api.DELETE("/produk/:produkId", ProdukController.Delete)
 		api.GET("/produk/:produkId", ProdukController.FindById)
 		api.GET("/produk", ProdukController.FindAll)
-		api.PUT("/produk/:produkId/uploads", ProdukController.UpdateImage)
+		api.PUT("/produk/:produkId/gambar", ProdukController.UpdateImage)
+		api.GET("/produk/:produkId/gambar", ProdukController.DownloadGambar)
 
 		api.POST("/inventaris", InventarisController.Create)
 		api.GET("/inventaris/:produkName", InventarisController.FindByName)

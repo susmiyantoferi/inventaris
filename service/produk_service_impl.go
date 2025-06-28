@@ -4,6 +4,7 @@ import (
 	"inventaris/models"
 	"inventaris/repository"
 	"inventaris/web"
+	"os"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/shopspring/decimal"
@@ -83,12 +84,16 @@ func (p *ProdukServiceImpl) Update(r web.UpdateProdukRequest) (web.ProdukRespons
 }
 
 func (p *ProdukServiceImpl) Delete(produkId int) error {
-	_, err := p.ProdukRepository.FindById(produkId)
+	produk, err := p.ProdukRepository.FindById(produkId)
 	if err != nil {
 		return err
 	}
 
 	p.ProdukRepository.Delete(produkId)
+
+	if produk.Gambar != "" {
+		os.Remove("uploads/" + produk.Gambar)
+	}
 
 	return nil
 }

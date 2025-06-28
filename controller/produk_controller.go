@@ -9,4 +9,5 @@ type ProdukController interface {
 	FindById(ctx *gin.Context)
 	FindAll(ctx *gin.Context)
 	UpdateImage(ctx *gin.Context)
+	DownloadGambar(ctx *gin.Context)
 }

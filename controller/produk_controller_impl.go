@@ -197,3 +197,33 @@ func (p *ProdukControllerImpl) UpdateImage(ctx *gin.Context) {
 
 	helper.ResponseJSON(ctx, http.StatusOK, "Updated Gambar", result)
 }
+
+func(p *ProdukControllerImpl) DownloadGambar(ctx *gin.Context){
+	produkId := ctx.Param("produkId")
+	id, err := strconv.Atoi(produkId)
+	if err != nil{
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk Id", err.Error())
+		return
+	}
+
+	produk, err := p.ProdukService.FindById(id)
+	if err != nil{
+		helper.ResponseJSON(ctx, http.StatusNotFound, "Produk Id Not Found", nil)
+		return
+	}
+
+	if produk.Gambar == ""{
+		helper.ResponseJSON(ctx, http.StatusNotFound, "Gambar Produk Not Found", nil)
+		return
+	}
+
+	file := "uploads/" + produk.Gambar
+	download := ctx.DefaultQuery("download", "false")
+	
+	if download == "true"{
+		ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", produk.Gambar))
+	}
+	//ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", produk.Gambar))
+
+	ctx.File(file)
+}
