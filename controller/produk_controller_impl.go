@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"fmt"
+	"inventaris/helper"
 	"inventaris/service"
 	"inventaris/web"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -99,7 +102,7 @@ func (p *ProdukControllerImpl) Delete(ctx *gin.Context) {
 		return
 	}
 
-	if errs := p.ProdukService.Delete(id); errs != nil{
+	if errs := p.ProdukService.Delete(id); errs != nil {
 		ctx.JSON(http.StatusNotFound, web.WebResponse{
 			Code:   http.StatusNotFound,
 			Status: "Produk Not Found",
@@ -109,11 +112,11 @@ func (p *ProdukControllerImpl) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code: http.StatusOK,
+		Code:   http.StatusOK,
 		Status: "Deleted",
-		Data: nil,
+		Data:   nil,
 	})
-	
+
 }
 
 func (p *ProdukControllerImpl) FindById(ctx *gin.Context) {
@@ -139,9 +142,9 @@ func (p *ProdukControllerImpl) FindById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code: http.StatusOK,
+		Code:   http.StatusOK,
 		Status: "Ok",
-		Data: result,
+		Data:   result,
 	})
 }
 
@@ -157,9 +160,40 @@ func (p *ProdukControllerImpl) FindAll(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, web.WebResponse{
-		Code: http.StatusOK,
+		Code:   http.StatusOK,
 		Status: "Ok",
-		Data: produk,
+		Data:   produk,
 	})
 
+}
+
+func (p *ProdukControllerImpl) UpdateImage(ctx *gin.Context) {
+
+	produkId := ctx.Param("produkId")
+	id, err := strconv.Atoi(produkId)
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid Produk Id", err.Error())
+		return
+	}
+
+	file, err := ctx.FormFile("gambar")
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusBadRequest, "Invalid File", err.Error())
+		return
+	}
+
+	filename := fmt.Sprintf("%d_%s", time.Now().Unix(), file.Filename)
+	err = ctx.SaveUploadedFile(file, "uploads/"+filename)
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusInternalServerError, "Failed Upload File", err.Error())
+		return
+	}
+
+	result, err := p.ProdukService.UpdateImage(id, filename)
+	if err != nil {
+		helper.ResponseJSON(ctx, http.StatusInternalServerError, "Failed Save File", err.Error())
+		return
+	}
+
+	helper.ResponseJSON(ctx, http.StatusOK, "Updated Gambar", result)
 }

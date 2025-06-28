@@ -139,6 +139,7 @@ func (i *InventarisServImpl) FindAll() ([]web.InventarisResponse, error) {
 				Deskripsi: v.Produk.Kategori,
 				Harga: v.Produk.Harga,
 				Kategori: v.Produk.Kategori,
+				Gambar: v.Produk.Gambar,
 			},
 			Jumlah: v.Jumlah,
 			Lokasi: v.Lokasi,

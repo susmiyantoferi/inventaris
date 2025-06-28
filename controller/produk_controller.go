@@ -8,4 +8,5 @@ type ProdukController interface {
 	Delete(ctx *gin.Context)
 	FindById(ctx *gin.Context)
 	FindAll(ctx *gin.Context)
+	UpdateImage(ctx *gin.Context)
 }

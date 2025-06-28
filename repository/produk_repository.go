@@ -8,4 +8,5 @@ type ProdukRepository interface {
 	Delete(produkId int)
 	FindById(produkId int) (models.Produk, error)
 	FindAll() ([]models.Produk, error)
+	UpdateImage(produkId int, gambar string) (models.Produk, error)
 }

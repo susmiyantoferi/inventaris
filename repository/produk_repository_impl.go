@@ -66,3 +66,22 @@ func (p *ProdukRepositoryImpl) FindAll() ([]models.Produk, error) {
 
 	return produk, nil
 }
+
+func(p *ProdukRepositoryImpl) UpdateImage(produkId int, gambar string) (models.Produk, error){
+	var produk models.Produk
+
+	err := p.DB.First(&produk, produkId).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return models.Produk{}, errors.New("produk not found")
+		}
+		return models.Produk{}, err
+	}
+
+	result := p.DB.Model(&produk).Update("gambar", gambar)
+	if result.Error != nil{
+		return models.Produk{}, result.Error
+	}
+	
+	return produk, nil
+}

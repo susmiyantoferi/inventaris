@@ -14,6 +14,7 @@ func ToInventResponse(inv models.Inventaris, produk models.Produk) web.Inventari
 			Deskripsi: produk.Deskripsi,
 			Harga:     produk.Harga,
 			Kategori:  produk.Kategori,
+			Gambar: produk.Gambar,
 		},
 		Jumlah: inv.Jumlah,
 		Lokasi: inv.Lokasi,

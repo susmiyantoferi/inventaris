@@ -8,4 +8,5 @@ type ProdukService interface {
 	Delete(produkId int) (error)
 	FindById(produkId int) (web.ProdukResponse, error)
 	FindAll() ([]web.ProdukResponse, error)
+	UpdateImage(produkId int, gambar string) (web.ProdukResponse, error)
 }

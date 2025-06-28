@@ -105,6 +105,7 @@ func (p *ProdukServiceImpl) FindById(produkId int) (web.ProdukResponse, error) {
 		Deskripsi: produk.Deskripsi,
 		Harga:     produk.Harga,
 		Kategori:  produk.Kategori,
+		Gambar:    produk.Gambar,
 	}
 
 	return response, nil
@@ -124,10 +125,34 @@ func (p *ProdukServiceImpl) FindAll() ([]web.ProdukResponse, error) {
 			Deskripsi: value.Deskripsi,
 			Harga:     value.Harga,
 			Kategori:  value.Kategori,
+			Gambar:    value.Gambar,
 		}
 
 		responses = append(responses, response)
 	}
 
 	return responses, nil
+}
+
+func (p *ProdukServiceImpl) UpdateImage(produkId int, gambar string) (web.ProdukResponse, error) {
+	produk, err := p.ProdukRepository.FindById(produkId)
+	if err != nil {
+		return web.ProdukResponse{}, err
+	}
+
+	result, err := p.ProdukRepository.UpdateImage(produkId, gambar)
+	if err != nil {
+		return web.ProdukResponse{}, err
+	}
+
+	response := web.ProdukResponse{
+		ID:        produk.Id,
+		Nama:      produk.Nama,
+		Deskripsi: produk.Deskripsi,
+		Harga:     produk.Harga,
+		Kategori:  produk.Kategori,
+		Gambar:    result.Gambar,
+	}
+
+	return response, nil
 }

@@ -7,11 +7,16 @@ import (
 	"inventaris/route"
 	"inventaris/service"
 	"log"
+	"os"
 
 	"github.com/go-playground/validator/v10"
 )
 
 func main(){
+	err := os.MkdirAll("uploads/", os.ModePerm)
+	if err != nil {
+		log.Fatal("Gagal membuat folder uploads", err)
+	}
 
 	database := app.Db()
 	validate := validator.New()
