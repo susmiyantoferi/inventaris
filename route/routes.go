@@ -9,6 +9,7 @@ import (
 func NewRouter(
 	ProdukController controller.ProdukController,
 	InventarisController controller.InventarisController,
+	PesananController controller.PesananController,
 ) *gin.Engine {
 	router := gin.Default()
 
@@ -28,6 +29,12 @@ func NewRouter(
 		api.PUT("/inventaris/:produkName/add-stok", InventarisController.AddStok)
 		api.PUT("/inventaris/:produkName/reduce-stok", InventarisController.ReduceStok)
 		api.GET("/inventaris", InventarisController.FindAll)
+
+		api.POST("/pesanan", PesananController.Create)
+		api.PUT("/pesanan/:produkName", PesananController.Update)
+		api.DELETE("/pesanan/:pesananId", PesananController.Delete)
+		api.GET("/pesanan/:pesananId", PesananController.FindById)
+		api.GET("/pesanan", PesananController.FindAll)
 	}
 
 	return router

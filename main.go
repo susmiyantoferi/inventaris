@@ -29,7 +29,11 @@ func main(){
 	inventService := service.NewInventarisServImpl(inventRepo, validate, database)
 	inventController := controller.NewInventControllerImpl(inventService)
 
-	routes := route.NewRouter(produkController, inventController)
+	pesananRepo := repository.NewPesananRepositoryImpl(database)
+	pesananService := service.NewPesananServiceImpl(pesananRepo, validate, produkRepo)
+	pesananController := controller.NewPesananControllerImpl(pesananService)
+
+	routes := route.NewRouter(produkController, inventController, pesananController)
 	
 	log.Println("Server run at http://localhost:8080")
 	routes.Run(":8080")
