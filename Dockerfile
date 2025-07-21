@@ -8,7 +8,7 @@ FROM debian:bookworm-slim
 WORKDIR /app
 
 # Install netcat (nc)
-RUN apt-get update && apt-get install -y netcat && apt-get clean
+RUN apt-get update && apt-get install -y netcat-openbsd && apt-get clean
 COPY --from=builder /app/goapp .
 COPY --from=builder /app/.env .
 COPY wait-for-db.sh .
