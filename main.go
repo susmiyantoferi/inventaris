@@ -8,7 +8,6 @@ import (
 	"inventaris/service"
 	"log"
 	"os"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -36,7 +35,6 @@ func main(){
 
 	routes := route.NewRouter(produkController, inventController, pesananController)
 
-	time.Sleep(5 * time.Second)
 	
 	log.Println("Server run at http://localhost:8080")
 	routes.Run(":8080")
