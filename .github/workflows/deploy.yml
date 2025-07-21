@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/student/student3/
+            cd /home/student/student3/inventaris-api
             git pull origin main
             docker compose down 
             docker compose up -d 
