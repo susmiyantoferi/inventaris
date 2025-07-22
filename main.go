@@ -35,6 +35,7 @@ func main(){
 
 	routes := route.NewRouter(produkController, inventController, pesananController)
 
+	//testtt triger ci/cd
 	
 	log.Println("Server run at http://localhost:8080")
 	routes.Run(":8080")
